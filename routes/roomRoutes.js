@@ -16,8 +16,8 @@ roomRoutes.get("/:id", protect, getRoom);
 // Get chat history for a room
 roomRoutes.get("/:id/messages", protect, getRoomMessages);
 
-roomRoutes.get("/", (req, res) => {
-  res.send("Auth route works!");
-});
+// roomRoutes.get("/", (req, res) => {
+//   res.send("Auth route works!");
+// });
 
 

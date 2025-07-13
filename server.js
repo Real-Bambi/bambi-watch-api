@@ -21,6 +21,7 @@ connectDB();
 // Create app
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -38,7 +39,7 @@ app.use("/api/v1/rooms", roomRoutes);
 
 // Socket.IO
 io.on("connection", (socket) => {
-  console.log("🔌 New user connected:", socket.id);
+  console.log(" New user connected:", socket.id);
 
   //sync + chat events
   handleSocketEvents(io, socket);

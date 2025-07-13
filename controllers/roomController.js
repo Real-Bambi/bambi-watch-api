@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import {Room} from "../models/room.js";
 import extractVideoId from "../utils/extractVideoId.js";
 import Message from "../models/message.js";
@@ -46,10 +48,10 @@ export const getRoom = async (req, res) => {
 
 // Get chat history for a room
 export const getRoomMessages = async (req, res) => {
-  const { id: roomId } = req.params;
+  const { id } = req.params;
 
   try {
-    const messages = await Message.find({ roomId })
+    const messages = await Message.find({ roomId : new mongoose.Types.ObjectId(id)})
       .sort({ createdAt: 1 }) // oldest first
       .select("username message createdAt");
 
