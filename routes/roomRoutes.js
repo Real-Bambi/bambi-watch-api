@@ -8,8 +8,9 @@ import { createRoomSchema } from "../validators/roomValidator.js";
 export const roomRoutes = express.Router();
 
 // Create room → must be logged in
-roomRoutes.post("/", protect, validate(createRoomSchema), createRoom);
 roomRoutes.get("/active", getActiveRooms);
+roomRoutes.post("/", protect, validate(createRoomSchema), createRoom);
+
 
 // Get room info by ID
 roomRoutes.get("/:id", protect, getRoom);
