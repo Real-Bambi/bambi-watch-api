@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import {Room} from "../models/room.js";
 import extractVideoId from "../utils/extractVideoId.js";
 import Message from "../models/message.js";
+import { roomUsers } from "./socketHandler.js";
 
 // Create new room
 export const createRoom = async (req, res) => {
@@ -58,5 +59,35 @@ export const getRoomMessages = async (req, res) => {
     res.json(messages);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getActiveRooms = async (req, res) => {
+  try {
+    // Get unique room IDs from active sockets
+    const activeRoomIds = [...new Set(Object.values(roomUsers).map(u => u.roomId))];
+
+    if (activeRoomIds.length === 0) {
+      return res.json([]);
+    }
+
+    // Get room details
+    const rooms = await Room.find({ _id: { $in: activeRoomIds } });
+
+    // Add user count
+    const result = rooms.map(room => {
+      const count = Object.values(roomUsers).filter(u => u.roomId === String(room._id)).length;
+      return {
+        roomId: room._id,
+        name: room.name,
+        videoId: room.videoId,
+        usersOnline: count,
+      };
+    });
+
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch active rooms" });
   }
 };

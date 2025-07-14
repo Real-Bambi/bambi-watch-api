@@ -1,16 +1,16 @@
-import mongoose from "mongoose"; // ✅ Add this!
+import mongoose from "mongoose"; 
 import Message from "../models/message.js";
 
-// 🗂️ Tracks connected socket's user & room
-const roomUsers = {};
+//  Tracks connected socket's user & room
+export const roomUsers = {};
 
 export default function handleSocketEvents(io, socket) {
-  console.log("📡 Socket connected:", socket.id);
+  // console.log("📡 Socket connected:", socket.id);
 
   // --- When a user joins a watch room ---
   socket.on("joinRoom", async ({ roomId, username }) => {
     socket.join(roomId);
-    console.log(`👥 ${username} joined room ${roomId}`);
+    // console.log(`👥 ${username} joined room ${roomId}`);
 
     // Save this socket's info
     roomUsers[socket.id] = { username, roomId };
@@ -25,7 +25,7 @@ export default function handleSocketEvents(io, socket) {
       users: users,
     });
 
-    // ✅ Broadcast as *system* event, NOT chat message!
+    //  Broadcast as *system* event, NOT chat message!
     io.in(roomId).emit("room:systemMessage", {
       message: `${username} joined`,
       timestamp: new Date().toISOString(),
@@ -47,7 +47,7 @@ export default function handleSocketEvents(io, socket) {
         users: users,
       });
 
-      // ✅ Broadcast as *system* event, NOT chat message!
+      //  Broadcast as *system* event, NOT chat message!
       io.in(roomId).emit("room:systemMessage", {
         message: `${username || "A user"} left`,
         timestamp: new Date().toISOString(),
@@ -77,7 +77,7 @@ export default function handleSocketEvents(io, socket) {
       username,
     });
 
-    // ✅ Save only real user messages — convert IDs to ObjectId!
+    //  Save only real user messages — convert IDs to ObjectId!
     await Message.create({
       roomId: new mongoose.Types.ObjectId(roomId),
       userId: new mongoose.Types.ObjectId(userId),
