@@ -11,6 +11,7 @@ import handleSocketEvents from "./controllers/socketHandler.js";
 // Routes
 import {authRoutes} from "./routes/authRoutes.js";
 import {roomRoutes} from "./routes/roomRoutes.js";
+import { userRoutes } from "./routes/userRoutes.js";
 
 // Load env vars
 dotenv.config();
@@ -36,6 +37,8 @@ app.use(express.json());
 // API Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/rooms", roomRoutes);
+app.use("/api/v1/users", userRoutes)
+
 
 // Socket.IO
 io.on("connection", (socket) => {
