@@ -28,6 +28,17 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is required"],
       minlength: 6,
     },
+    bio: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+      default: "",
+    },
+    avatarUrl: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   { timestamps: true }
 );
