@@ -64,19 +64,28 @@ export const getRoomMessages = async (req, res) => {
 
 export const getActiveRooms = async (req, res) => {
   try {
-    // Get unique room IDs from active sockets
-    const activeRoomIds = [...new Set(Object.values(roomUsers).map(u => u.roomId))];
+    // Extract unique room IDs from active sockets
+    const activeRoomIds = [
+      ...new Set(Object.values(roomUsers).map((u) => u.roomId)),
+    ];
 
+    // If no active room IDs, return the new structure immediately
     if (activeRoomIds.length === 0) {
-      return res.json([]);
+      return res.json({
+        hasActiveRooms: false,
+        rooms: [],
+      });
     }
 
-    // Get room details
+    // Otherwise, get room details from DB
     const rooms = await Room.find({ _id: { $in: activeRoomIds } });
 
-    // Add user count
-    const result = rooms.map(room => {
-      const count = Object.values(roomUsers).filter(u => u.roomId === String(room._id)).length;
+    //  Add user count to each room
+    const result = rooms.map((room) => {
+      const count = Object.values(roomUsers).filter(
+        (u) => u.roomId === String(room._id)
+      ).length;
+
       return {
         roomId: room._id,
         name: room.name,
@@ -85,7 +94,11 @@ export const getActiveRooms = async (req, res) => {
       };
     });
 
-    res.json(result);
+    // Return the new structured response
+    res.json({
+      hasActiveRooms: true,
+      rooms: result,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch active rooms" });
