@@ -79,12 +79,27 @@ export const updateProfile = async (req, res) => {
 
 
 // DELETE /api/v1/users/me
-export const deleteProfile = async (req, res) => {
+
+export const deleteUserById = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.user.id);
-    res.json({ message: "Account deleted successfully" });
+    const { id } = req.params;
+
+    await User.findByIdAndDelete(id);
+
+    res.json({ message: "User deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+// export const deleteProfile = async (req, res) => {
+//   try {
+//     await User.findByIdAndDelete(req.user.id);
+//     res.json({ message: "Account deleted successfully" });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };

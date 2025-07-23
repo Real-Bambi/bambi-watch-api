@@ -1,7 +1,7 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import validate from "../middleware/validate.js";
-import { updateProfile, getProfile, deleteProfile, getAllUsers } from "../controllers/userController.js";
+import { updateProfile, getProfile, deleteUserById, getAllUsers } from "../controllers/userController.js";
 import { updateProfileSchema } from "../validators/userValidator.js";
 import { upload } from "../config/multer.js";
 
@@ -16,5 +16,5 @@ userRoutes.patch(
   validate(updateProfileSchema),
   updateProfile
 );
-userRoutes.delete("/me", protect, deleteProfile);
+userRoutes.delete("/:id", protect, deleteUserById);
 userRoutes.get("/", protect, getAllUsers);
